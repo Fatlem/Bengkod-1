@@ -4,18 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Periksa extends Model
 {
     use HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
-    protected $table = "periksas";
 
     protected $fillable = [
         'id_pasien',
@@ -26,34 +20,26 @@ class Periksa extends Model
     ];
 
     /**
-     * Get the formatted tgl_periksa attribute.
-     *
-     * @param  string  $value
-     * @return string
+     * Relasi: Periksa milik seorang Pasien (User)
      */
-    public function getTglPeriksaAttribute($value)
-    {
-        return Carbon::parse($value)->format('d M Y H:i');
-    }
-
-    /**
-     * Get the pasien associated with the periksa.
-     */
-    public function pasien()
+    public function pasien(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_pasien');
     }
 
     /**
-     * Get the dokter associated with the periksa.
+     * Relasi: Periksa milik seorang Dokter (User)
      */
-    public function dokter()
+    public function dokter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_dokter');
     }
 
-    public function obat()
+    /**
+     * Relasi: Periksa memiliki banyak DetailPeriksa
+     */
+    public function detailPeriksas(): HasMany
     {
-        return $this->belongsToMany(Obat::class, 'detail_periksas', 'id_periksa', 'id_obat');
+        return $this->hasMany(DetailPeriksa::class, 'id_periksa');
     }
 }

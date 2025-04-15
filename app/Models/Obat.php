@@ -4,17 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Obat extends Model
 {
     use HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
-    protected $table = "obats";
 
     protected $fillable = [
         'nama_obat',
@@ -23,18 +17,10 @@ class Obat extends Model
     ];
 
     /**
-     * Get the details for the obat.
+     * Relasi: Obat bisa ada di banyak DetailPeriksa
      */
-    public function detailPeriksa()
+    public function detailPeriksas(): HasMany
     {
         return $this->hasMany(DetailPeriksa::class, 'id_obat');
-    }
-
-    /**
-     * Accessor for formatting the harga attribute.
-     */
-    public function getHargaAttribute($value)
-    {
-        return number_format($value, 0, ',', '.');
     }
 }
